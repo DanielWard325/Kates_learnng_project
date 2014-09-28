@@ -40,8 +40,31 @@ class Hero():
         if (item.weight + self.current_weight) > self.max_carry_weight:
             print('{0} can not carry {1}, its too heavy'.format(self.name, item))
             return
+
         self.pack.append(item)
+        print('{0} has picked up a {1}'.format(self.name, item))
         self.current_weight = self.current_weight.__add__(item.weight)
+
+    def equip_item(self, item):
+
+        if item in self.pack:
+            if self.equipped_items[item.equip_type] == None:
+                self.equipped_items[item.equip_type] = item
+                self.pack.remove(item)
+                print('{0} has equipped a {1}'.format(self.name, item))
+            else:
+                print('you are already wearing one')
+                change = input('do you want to change it? type Y/N')
+                if change == 'Y':
+                    self.pack.append(self.equipped_items[item.equip_type])
+                    print('{0} removes {1} and equips a {2}'.format(self.name, self.equipped_items[item.equip_type], item))
+                    self.equipped_items[item.equip_type] = item
+                    self.pack.remove(item)
+                if change == 'N':
+                    print('{0} leaves the {1} on'.format(self.name, self.equipped_items[item.equip_type]))
+                    pass
+
+
 
 
 
@@ -50,14 +73,20 @@ class Hero():
             gen = ['his', 'he']
         else:
             gen = ['her', 'she']
-        return '{0} has {1} health\n'.format(self.name, self.health) + '{0} defence is {1} and attack is {2}\n'.format(gen[0], self.defence, self.attack) + '{0} is carrying {1} items in {3} pack that weighs {2}kg\n'.format(gen[1], len(self.pack), self.current_weight, gen[0])
+        return '{0} the {2} has {1} health\n'.format(self.name, self.health, self.profession) + '{0} defence is {1} and attack is {2}\n'.format(gen[0], self.defence, self.attack) + '{0} is carrying {1} items in {3} pack that weighs {2}kg\n'.format(gen[1], len(self.pack), self.current_weight, gen[0])
 
 class Item():
 
-    def __init__(self, name, weight):
+    def __init__(self, name, weight, equip_type, modifiers={}):
 
         self.name = name
         self.weight = weight
+        self.equip_type = equip_type
+        self.modifiers = modifiers
+    def __str__(self):
+        return self.name
+    def __repr__(self):
+        return self.name
 
 if __name__ == "__main__":
 
